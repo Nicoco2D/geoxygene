@@ -756,5 +756,6 @@
 		<module>geoxygene-spatialrelation</module>
 		<module>geoxygene-matching</module>
 		<module>geoxygene-ontology</module>
+    <module>geoxygen-blind</module>
   </modules>
 </project>
