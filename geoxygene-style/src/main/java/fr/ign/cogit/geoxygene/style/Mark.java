@@ -44,9 +44,12 @@ public class Mark {
 
     @XmlElement(name = "Stroke", type=Stroke.class)
     private Stroke stroke = null;
+    
+    @XmlElement(name = "FillWithBorder", type=boolean.class)
+    private boolean fillWithBorder = false;
 
     private static Shape square = new Rectangle2D.Float(-0.5f, -0.5f, 1.0f, 1.0f);
-    private static Shape circle = new Ellipse2D.Float(-0.5f, -0.5f, 1.0f, 1.0f);
+    private static Shape circle = new Ellipse2D.Float(-0.45f, -0.45f, 0.9f, 0.9f);
     private static Shape triangle = new Polygon2D(new float[] { -0.5f * (float) Math.cos(Math.PI / 6), 0.0f,
             0.5f * (float) Math.cos(Math.PI / 6) }, new float[] { -0.5f * (float) Math.sin(Math.PI / 6), 0.5f,
             -0.5f * (float) Math.sin(Math.PI / 6) }, 3);
@@ -65,6 +68,22 @@ public class Mark {
      */
     public void setWellKnownName(String wellKnownName) {
         this.wellKnownName = wellKnownName;
+    }
+    
+    /**
+     * Renvoie la valeur de l'attribut fillWithBorder.
+     * @return la valeur de l'attribut fillWithBorder
+     */
+    public boolean getFillWithBorder() {
+        return this.fillWithBorder;
+    }
+
+    /**
+     * Affecte la valeur de l'attribut fillWithBorder.
+     * @param wellKnownName l'attribut fillWithBorder à affecter
+     */
+    public void setFillWithBorder(boolean fillWithBorder) {
+        this.fillWithBorder = fillWithBorder;
     }
 
     /**
@@ -140,7 +159,9 @@ public class Mark {
     private static Shape minus = new Line2D.Float(-0.5f, 0.0f, 0.5f, 0.0f);
     private static Shape carrow = new Polygon2D(new float[] { -0.5f, 0f, -0.5f, -0.5f }, new float[] { -0.25f, 0f,
             0.25f, -0.25f }, 4);
-
+    private static Shape slash = new Polygon2D(new float[] { 0.5f, 0.5f, 0.1f, -0.1f, 0.5f, 0.5f, -0.1f, -0.5f, -0.5f, 0.1f }, new float[] { -0.5f, 0.1f, 0.5f, 0.5f, -0.1f, -0.5f, -0.5f, -0.1f, 0.1f, -0.5f }, 10);
+    private static Shape backSlash = new Polygon2D(new float[] { -0.5f, -0.5f, -0.1f, 0.1f, -0.5f, -0.5f, 0.1f, 0.5f, 0.5f, -0.1f }, new float[] { -0.5f, 0.1f, 0.5f, 0.5f, -0.1f, -0.5f, -0.5f, -0.1f, 0.1f, -0.5f }, 10);
+    
     /**
      * @return the AWT shape used to draw this Mark
      */
@@ -171,6 +192,12 @@ public class Mark {
         }
         if (this.wellKnownName.equalsIgnoreCase("-")) {//$NON-NLS-1$
             return Mark.minus;
+        }
+        if (this.wellKnownName.equalsIgnoreCase("/") || this.wellKnownName.equalsIgnoreCase("slash")) {//$NON-NLS-1$
+            return Mark.slash;
+        }
+        if (this.wellKnownName.equalsIgnoreCase("\\") || this.wellKnownName.equalsIgnoreCase("backSlash")) {//$NON-NLS-1$
+            return Mark.backSlash;
         }
         if (this.wellKnownName.equalsIgnoreCase("shape://carrow")) {//$NON-NLS-1$
             return Mark.carrow;

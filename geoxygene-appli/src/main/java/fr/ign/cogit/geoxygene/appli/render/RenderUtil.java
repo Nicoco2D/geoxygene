@@ -2,10 +2,10 @@
  * This file is part of the GeOxygene project source files. GeOxygene aims at
  * providing an open framework which implements OGC/ISO specifications for the
  * development and deployment of geographic (GIS) applications. It is a open
- * source contribution of the COGIT laboratory at the Institut Géographique
+ * source contribution of the COGIT laboratory at the Institut GÃ©ographique
  * National (the French National Mapping Agency). See:
  * http://oxygene-project.sourceforge.net Copyright (C) 2005 Institut
- * Géographique National This library is free software; you can redistribute it
+ * GÃ©ographique National This library is free software; you can redistribute it
  * and/or modify it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation; either version 2.1 of the License,
  * or any later version. This library is distributed in the hope that it will be
@@ -137,7 +137,7 @@ public final class RenderUtil {
     }
 
     private static final Logger logger = Logger.getLogger(RenderUtil.class);
-
+    
     /**
      * Draw a geometry on the given graphics.
      * 
@@ -257,6 +257,7 @@ public final class RenderUtil {
                     opacity);
             return;
         }
+        
         if (feature.getGeom() == null) {
             return;
         }
@@ -982,7 +983,7 @@ public final class RenderUtil {
         for (Mark mark : graphic.getMarks()) {
             shapes.add(mark.toShape());
             graphics.setColor(ColorUtil
-                    .getColorWithOpacity(mark.getFill().getColor(), opacity));
+                    .getColorWithOpacity(mark.getStroke().getColor(), opacity));
         }
 
         List<AffineTransform> transforms = getGraphicStrokeLineStringTransforms(
@@ -1089,7 +1090,7 @@ public final class RenderUtil {
                 transform.concatenate(scaleTransform);
                 transform.concatenate(AffineTransform
                         .getRotateInstance(new Angle(previous, p).getValeur()));
-                // transform.concatenate(translation);
+                transform.concatenate(translation);
                 transforms.add(transform);
                 previous = p;
             }
@@ -1128,6 +1129,7 @@ public final class RenderUtil {
                             geometry.translate(translate_x, translate_y, 0));
                     if (shape != null) {
                         shapes.add(shape);
+                        
                     }
                 } catch (NoninvertibleTransformException e) {
                     e.printStackTrace();
@@ -1174,7 +1176,7 @@ public final class RenderUtil {
 
         }
         if (symbolizer.getCategorizedMap() != null) {
-            Object value = feature.getAttribute(
+        	Object value = feature.getAttribute(
                     symbolizer.getCategorizedMap().getPropertyName());
             int rgb = symbolizer.getCategorizedMap().getColor(value);
             fillColor = ColorUtil.getColorWithOpacity(new Color(rgb), opacity);
@@ -1188,6 +1190,7 @@ public final class RenderUtil {
                     Shape shape = viewport.toShape(geometry);
                     if (shape != null) {
                         shapes.add(shape);
+                        
                     }
                 } catch (NoninvertibleTransformException e) {
                     e.printStackTrace();
@@ -1207,18 +1210,20 @@ public final class RenderUtil {
                     }
                 }
             }
+
             for (Shape shape : shapes) {
                 if (symbolizer.getFill() != null) {
                     fillPolygon(symbolizer, shape, viewport, graphics, opacity);
                 }
                 if (symbolizer.getFill().getGraphicFill() != null) {
-                    List<Graphic> graphicList = symbolizer.getFill()
+                	List<Graphic> graphicList = symbolizer.getFill()
                             .getGraphicFill().getGraphics();
                     for (Graphic graphic : graphicList) {
                         double rotation = Double.parseDouble(graphic
                                 .getRotation().evaluate(feature).toString());
                         graphicFillPolygon(shape, graphic, viewport, graphics,
-                                opacity, rotation);
+                                opacity, rotation,geometry);
+                        
                     }
                 } else if (symbolizer.getFill().getExpressiveFill() != null) {
                     // Is there a texture parameter?
@@ -1330,7 +1335,9 @@ public final class RenderUtil {
         }
     }
 
-    /**
+    
+
+	/**
      * Draw a polygon using the Fill.Texture
      * 
      * @param data
@@ -1458,21 +1465,22 @@ public final class RenderUtil {
 
     private static void graphicFillPolygon(Shape shape, Graphic graphic,
             Viewport viewport, Graphics2D graphics, double opacity,
-            double rotation) {
+            double rotation, IGeometry geometry) {
         if (shape == null || viewport == null || graphic == null) {
             return;
         }
+        
         float size = graphic.getSize();
         graphics.setClip(shape);
         for (ExternalGraphic external : graphic.getExternalGraphics()) {
             if (external.getFormat().contains("png") //$NON-NLS-1$
                     || external.getFormat().contains("gif")) { //$NON-NLS-1$
                 Image image = external.getOnlineResource();
-                graphicFillPolygon(shape, image, size, graphics, opacity);
+                graphicFillPolygon(shape, image, size, graphics, opacity, viewport,false,null);
             } else {
                 if (external.getFormat().contains("svg")) { //$NON-NLS-1$
                     GraphicsNode node = external.getGraphicsNode();
-                    graphicFillPolygon(shape, node, size, graphics, opacity);
+                    graphicFillPolygon(shape, node, size, graphics, opacity, viewport);
                 }
             }
             return;
@@ -1490,6 +1498,7 @@ public final class RenderUtil {
             AffineTransform scaleTransform = AffineTransform
                     .getScaleInstance(markShapeSize, markShapeSize);
             translate.concatenate(scaleTransform);
+            
             Shape tranlatedShape = translate.createTransformedShape(markShape);
             BufferedImage buff = new BufferedImage(markShapeSize, markShapeSize,
                     BufferedImage.TYPE_INT_ARGB);
@@ -1497,13 +1506,13 @@ public final class RenderUtil {
             g.setColor(ColorUtil.getColorWithOpacity(mark.getFill().getColor(),
                     opacity));
             g.fill(tranlatedShape);
-            graphicFillPolygon(shape, buff, size, graphics, opacity);
+            graphicFillPolygon(shape, buff, size, graphics, opacity, viewport,mark.getFillWithBorder(),geometry);
         }
 
     }
-
+    
     private static void graphicFillPolygon(Shape shape, Image image, float size,
-            Graphics2D graphics, double opacity) {
+            Graphics2D graphics, double opacity, Viewport viewport, boolean careBorder, IGeometry geometry) {
         Double width = new Double(Math.max(1, shape.getBounds2D().getWidth()));
         Double height = new Double(
                 Math.max(1, shape.getBounds2D().getHeight()));
@@ -1511,30 +1520,98 @@ public final class RenderUtil {
         double factor = shapeHeight / image.getHeight(null);
         Double shapeWidth = new Double(
                 Math.max(image.getWidth(null) * factor, 1));
-        AffineTransform transform = AffineTransform.getTranslateInstance(
-                shape.getBounds2D().getMinX(), shape.getBounds2D().getMinY());
+        AffineTransform transform;
         Image scaledImage = image.getScaledInstance(shapeWidth.intValue(),
                 shapeHeight.intValue(), Image.SCALE_FAST);
-        BufferedImage buff = new BufferedImage(shapeWidth.intValue(),
-                shapeHeight.intValue(), BufferedImage.TYPE_INT_ARGB);
-        buff.getGraphics().drawImage(scaledImage, 0, 0, null);
-        ParameterBlock p = new ParameterBlock();
-        p.addSource(buff);
-        p.add(width.intValue());
-        p.add(height.intValue());
-        RenderedOp im = JAI.create("pattern", p);//$NON-NLS-1$
-        BufferedImage bufferedImage = im.getAsBufferedImage();
-        graphics.setComposite(AlphaComposite
-                .getInstance(AlphaComposite.SRC_OVER, (float) opacity));
-        graphics.drawImage(bufferedImage, transform, null);
-        bufferedImage.flush();
-        im.dispose();
-        scaledImage.flush();
-        buff.flush();
+        // NICOLAS : test si la texture doit gÃ©rer les bordures ou non
+        if (!careBorder){
+        	BufferedImage buff = new BufferedImage(shapeWidth.intValue(),
+                    shapeHeight.intValue(), BufferedImage.TYPE_INT_ARGB);
+            buff.getGraphics().drawImage(scaledImage, 0, 0, null);
+        	transform = AffineTransform.getTranslateInstance(
+                    shape.getBounds2D().getMinX(), shape.getBounds2D().getMinY());
+	        ParameterBlock p = new ParameterBlock();
+	        p.addSource(buff);
+	        p.add(width.intValue());
+	        p.add(height.intValue());
+	        RenderedOp im = JAI.create ("pattern", p);//$NON-NLS-1$
+	        BufferedImage bufferedImage = im.getAsBufferedImage();
+	        graphics.setComposite(AlphaComposite
+	                .getInstance(AlphaComposite.SRC_OVER, (float) opacity));
+	        graphics.drawImage(bufferedImage, transform, null);
+	        bufferedImage.flush();
+	        im.dispose();
+	        buff.flush();
+        }else{
+        	//  NICOLAS : Affichage de la shape a chaque sommet du building
+        	/*for(IDirectPosition pos : geomToTexture.coord()){
+        		try {
+					Point2D dest = viewport.toViewPoint(pos);
+					transform = AffineTransform.getTranslateInstance(
+	        				dest.getX()-shapeWidth/2,dest.getY()-shapeHeight/2);
+					graphics.drawImage(scaledImage,transform,null);
+				} catch (NoninvertibleTransformException e) {
+					e.printStackTrace();
+				}
+        	}*/
+        	//  NICOLAS : Affichage de la shape en mosaique avec test si a l'interieur du batiment
+        	for(double tmpY = shape.getBounds2D().getMinY();tmpY < shape.getBounds2D().getMaxY();tmpY=tmpY+shapeHeight){
+	        	for(double tmpX = shape.getBounds2D().getMinX();tmpX < shape.getBounds2D().getMaxX();tmpX = tmpX+shapeWidth){
+	        		if(shapeInsideBuilding(tmpX, tmpY, viewport, shapeWidth, shapeHeight,geometry)){
+		        		transform = AffineTransform.getTranslateInstance(
+		        				tmpX,tmpY);
+						graphics.drawImage(scaledImage,transform,null);
+	        		}
+	        	}
+        	}
+        	scaledImage.flush();
+        }
     }
 
-    private static void graphicFillPolygon(Shape shape, GraphicsNode node,
-            float size, Graphics2D graphics, double opacity) {
+    private static boolean shapeInsideBuilding(double tmpX, double tmpY, Viewport viewport,Double shapeWidth, Double shapeHeight,IGeometry geometry){
+		
+    	double ratioWidth = shapeWidth / 10;
+    	double ratioHeight = shapeHeight / 10;
+    	for(double y = tmpY; y < tmpY+shapeHeight; y = y+ratioHeight){
+    		for(double x = tmpX; x < tmpX+shapeWidth; x = x+ratioWidth){
+    			if(y == tmpY || y == tmpY+shapeHeight || x == tmpX || x == x+ratioWidth){
+	        		if (!pointInsideBuilding(x, y, viewport,geometry)) {
+						return false;
+					}
+	        	}
+			}
+    	}
+    	
+    	return true;
+    	
+    }
+    
+	private static boolean pointInsideBuilding(double tmpX, double tmpY, Viewport viewport, IGeometry geometry) {
+		
+		IDirectPositionList list = geometry.coord();
+		
+		Point2D temp = new Point2D.Double(tmpX, tmpY);
+		Point2D tmp = new Point2D.Double();
+		try {
+			tmp.setLocation(viewport.toModelPoint(temp));
+		} catch (NoninvertibleTransformException e) {
+			System.err.println("insideBuilding");
+			e.printStackTrace();
+		}
+		int size = list.size();
+		boolean inside = false;
+		for (int i = 0, j = size-1; i < size; i++) {
+			if( (list.get(i).getY() >= tmp.getY()) !=  (list.get(j).getY() >= tmp.getY()) &&
+			(tmp.getX() <= (list.get(j).getX() - list.get(i).getX()) * (tmp.getY() - list.get(i).getY()) / (list.get(j).getY() - list.get(i).getY()) + list.get(i).getX()))
+				inside = !inside;
+			j=i;
+		}
+		
+		return inside;
+	}
+
+	private static void graphicFillPolygon(Shape shape, GraphicsNode node,
+            float size, Graphics2D graphics, double opacity, Viewport viewport) {
         AffineTransform translate = AffineTransform.getTranslateInstance(
                 -node.getBounds().getMinX(), -node.getBounds().getMinY());
         node.setTransform(translate);
@@ -1543,7 +1620,7 @@ public final class RenderUtil {
                 (int) node.getBounds().getHeight(),
                 BufferedImage.TYPE_INT_ARGB);
         node.paint((Graphics2D) buff.getGraphics());
-        graphicFillPolygon(shape, buff, size, graphics, opacity);
+        graphicFillPolygon(shape, buff, size, graphics, opacity, viewport,false,null);
     }
 
     private static void fillPolygon(PolygonSymbolizer symbolizer, Shape shape,
@@ -1561,7 +1638,6 @@ public final class RenderUtil {
             graphics.setColor(color);
         }
         graphics.fill(shape);
-
     }
 
     private static void fillShadow(PolygonSymbolizer symbolizer, Shape shape,
