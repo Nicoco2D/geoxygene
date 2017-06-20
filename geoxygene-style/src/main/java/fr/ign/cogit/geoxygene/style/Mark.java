@@ -161,7 +161,9 @@ public class Mark {
             0.25f, -0.25f }, 4);
     private static Shape slash = new Polygon2D(new float[] { 0.5f, 0.5f, 0.1f, -0.1f, 0.5f, 0.5f, -0.1f, -0.5f, -0.5f, 0.1f }, new float[] { -0.5f, 0.1f, 0.5f, 0.5f, -0.1f, -0.5f, -0.5f, -0.1f, 0.1f, -0.5f }, 10);
     private static Shape backSlash = new Polygon2D(new float[] { -0.5f, -0.5f, -0.1f, 0.1f, -0.5f, -0.5f, 0.1f, 0.5f, 0.5f, -0.1f }, new float[] { -0.5f, 0.1f, 0.5f, 0.5f, -0.1f, -0.5f, -0.5f, -0.1f, 0.1f, -0.5f }, 10);
-    
+    private static Shape wave = new Polygon2D(new float[] { -0.5f, -0.35f, -0.3f, -0.25f, -0.2f, -0.15f, 0.15f, 0.2f, 0.25f, 0.3f, 0.35f, 0.5f, 0.5f, 0.35f, 0.3f, 0.25f, 0.2f, 0.15f, -0.15f, -0.2f, -0.25f, -0.3f, -0.35f, -0.5f }, 
+    		new float[]{ -0.1f, -0.25f, -0.275f, -0.3f, -0.275f, -0.25f, 0.05f, 0.075f, 0.1f, 0.075f, 0.05f, -0.1f, 0.1f, 0.25f, 0.275f, 0.3f, 0.275f, 0.25f, -0.05f, -0.075f, -0.1f, -0.075f, -0.05f, 0.1f },24);
+    private static Shape hAndvLine = new Polygon2D(new float[] { -0.5f, -0.1f, -0.1f, 0.1f, 0.1f, 0.5f, 0.5f, 0.1f, 0.1f, -0.1f, -0.1f, -0.5f },new float[]{ -0.1f, -0.1f, -0.5f, -0.5f, -0.1f, -0.1f, 0.1f, 0.1f, 0.5f, 0.5f, 0.1f, 0.1f},12);
     /**
      * @return the AWT shape used to draw this Mark
      */
@@ -201,6 +203,12 @@ public class Mark {
         }
         if (this.wellKnownName.equalsIgnoreCase("shape://carrow")) {//$NON-NLS-1$
             return Mark.carrow;
+        }
+        if (this.wellKnownName.equalsIgnoreCase("~") || this.wellKnownName.equalsIgnoreCase("wave")){//$NON-NLS-1$
+        	return Mark.wave;
+        }
+        if (this.wellKnownName.equalsIgnoreCase("+") || this.wellKnownName.equalsIgnoreCase("hAndvLine")){//$NON-NLS-1$
+        	return Mark.hAndvLine;
         }
         return null;
     }
