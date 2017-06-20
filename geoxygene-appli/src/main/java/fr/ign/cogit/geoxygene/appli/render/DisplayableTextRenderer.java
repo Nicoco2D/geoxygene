@@ -54,6 +54,7 @@ import fr.ign.cogit.geoxygene.appli.Viewport;
 import fr.ign.cogit.geoxygene.appli.gl.GLContext;
 import fr.ign.cogit.geoxygene.appli.gl.ResourcesManager;
 import fr.ign.cogit.geoxygene.appli.layer.LayerViewGLPanel;
+import fr.ign.cogit.geoxygene.appli.plugin.BlindPlugin;
 import fr.ign.cogit.geoxygene.appli.render.groups.RenderingGroup;
 import fr.ign.cogit.geoxygene.appli.render.methods.RenderingMethodDescriptor;
 import fr.ign.cogit.geoxygene.appli.render.primitive.AbstractDisplayable;
@@ -131,6 +132,9 @@ public class DisplayableTextRenderer extends DisplayableRenderer<AbstractDisplay
         String text = (value == null) ? null : value.toString();
         if (text != null) {
             RenderUtil.paint(textSym, text, f.getGeom(), viewport, this.textImageGraphics, opacity);
+            if(BlindPlugin.IS_BLIND_ENABLE){
+            	BlindPlugin.paint(textSym, text, f.getGeom(), viewport, this.textImageGraphics, opacity);
+            }
         }
     }
 

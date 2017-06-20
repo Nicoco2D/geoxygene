@@ -1,24 +1,54 @@
 package fr.ign.cogit.geoxygene.appli.plugin;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.InputStream;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import fr.ign.cogit.geoxygene.api.spatial.geomaggr.IMultiCurve;
+import fr.ign.cogit.geoxygene.api.spatial.geomprim.IOrientableCurve;
+import fr.ign.cogit.geoxygene.api.spatial.geomroot.IGeometry;
 import fr.ign.cogit.geoxygene.appli.GeOxygeneApplication;
+import fr.ign.cogit.geoxygene.appli.Viewport;
+import fr.ign.cogit.geoxygene.appli.api.ProjectFrame;
 import fr.ign.cogit.geoxygene.appli.plugin.GeOxygeneApplicationPlugin;
+import fr.ign.cogit.geoxygene.appli.render.RenderUtil;
+import fr.ign.cogit.geoxygene.style.LabelPlacement;
+import fr.ign.cogit.geoxygene.style.Layer;
+import fr.ign.cogit.geoxygene.style.LinePlacement;
+import fr.ign.cogit.geoxygene.style.Placement;
+import fr.ign.cogit.geoxygene.style.PointPlacement;
+import fr.ign.cogit.geoxygene.style.Symbolizer;
+import fr.ign.cogit.geoxygene.style.TextSymbolizer;
+import fr.ign.cogit.geoxygene.util.ColorUtil;
+import fr.ign.cogit.geoxygene.util.algo.JtsAlgorithms;
+import java_cup.sym;
 
 public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 {
+	public final static boolean IS_BLIND_ENABLE = true;
+	
 	/** Logger. */
 	  private final static Logger LOGGER = Logger.getLogger(BlindPlugin.class.getName());
 	  
 	  /** GeOxygeneApplication */
 	  private GeOxygeneApplication application = null;
+	  
+	  /** Noms des sous menus */
+	  private static String itemBrailleName = "Noms braille";
+	  private static String itemGreyLevelMap = "Map niveau gris";
+	  private static String itemParameters = "Parametres";
+
 
 	  public BlindPlugin() {
 	  }
@@ -34,10 +64,19 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 	    JMenuBar menuBar = application.getMainFrame().getMenuBar();
 	    JMenu blindMenu = new JMenu("Blind");
 	    
-	    JMenuItem menuItem = new JMenuItem("Noms en braille");
-	    menuItem.addActionListener(this);
+	    JMenuItem menuItemBrailleName = new JMenuItem(itemBrailleName);
+	    menuItemBrailleName.addActionListener(this);
 	    
-	    blindMenu.add(menuItem);
+	    JMenuItem menuItemGreyLevelMap = new JMenuItem(itemGreyLevelMap);
+	    menuItemGreyLevelMap.addActionListener(this);
+	    
+	    JMenuItem menuItemParameters = new JMenuItem(itemParameters);
+	    menuItemParameters.addActionListener(this);
+	    
+	    blindMenu.add(menuItemBrailleName);
+	    blindMenu.add(menuItemGreyLevelMap);
+	    blindMenu.addSeparator();
+	    blindMenu.add(menuItemParameters);
 
 	    
 	    menuBar.add(blindMenu, menuBar.getMenuCount() - 1);
@@ -48,46 +87,34 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 	  @Override
 	  public void actionPerformed(final ActionEvent e) {
 
-		  /**
-	    // On récupère la couche sélectionnée
-	    ProjectFrame project = this.application.getMainFrame().getSelectedProjectFrame();
-	    Set<Layer> selectedLayers = project.getLayerLegendPanel().getSelectedLayers();
-	    if (selectedLayers.size() != 1) {
-	      javax.swing.JOptionPane.showMessageDialog(null, "You need to select one (and only one) layer.");
-	      GaussianFilterPlugin.LOGGER.error("You need to select one (and only one) layer.");
-	      return;
-	    }
-	    Layer layer = selectedLayers.iterator().next();
-	    
-	    // On propose le champ de saisie du paramètre sigma pour le filtrage gaussien.
-	    double sigma = Double.parseDouble(JOptionPane.showInputDialog(GaussianFilterPlugin.this.application.getMainFrame(), "Sigma"));
-	    
-	    // On construit une population de DefaultFeature
-	    Population<DefaultFeature> pop = new Population<DefaultFeature>("GaussianFilter " + layer.getName() + " " + sigma);
-	    pop.setClasse(DefaultFeature.class);
-	    pop.setPersistant(false);
-	    for (IFeature f : layer.getFeatureCollection()) {
-	      ILineString line = null;
-	      if (ILineString.class.isAssignableFrom(f.getGeom().getClass())) {
-	        line = (ILineString) f.getGeom();
-	      } else {
-	        if (IMultiCurve.class.isAssignableFrom(f.getGeom().getClass())) {
-	          line = ((IMultiCurve<ILineString>) f.getGeom()).get(0);
-	        }
-	      }
-	      // On ajoute à la population l'arc lissé
-	      pop.nouvelElement(GaussianFilter.gaussianFilter(line, sigma, 1));
-	    }
-	    
-	    // Créer les métadonnées du jeu correspondant et on l'ajoute à la population
-	    FeatureType newFeatureType = new FeatureType();
-	    newFeatureType.setGeometryType(ILineString.class);
-	    pop.setFeatureType(newFeatureType);
-	    
-	    // On ajoute au ProjectFrame la nouvelle couche créée à partir de la nouvelle population
-	    project.getDataSet().addPopulation(pop);
-	    project.addFeatureCollection(pop, pop.getNom(), layer.getCRS());
-	    **/
+		  if(e.getActionCommand() == itemBrailleName){
+			  System.out.println("Noms en braille");
+			  actionItemBrailleName();
+		  } else if (e.getActionCommand() == itemGreyLevelMap){
+			  System.out.println("Map en niveau de gris");
+			  actionItemGreyLevelMap();
+		  } else if (e.getActionCommand() == itemParameters){
+			  System.out.println("Parametres");
+			  actionItemParameters();
+		  }
+		  
 	  }
+
+
+
+	private void actionItemBrailleName() {
+		     
+	}
+	
+
+	private void actionItemGreyLevelMap() {
+		
+	}
+	
+	private void actionItemParameters() {
+		
+	}
+	
+
 
 }

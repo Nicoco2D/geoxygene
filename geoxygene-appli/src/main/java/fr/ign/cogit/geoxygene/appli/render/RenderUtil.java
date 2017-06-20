@@ -38,6 +38,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.renderable.ParameterBlock;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1832,14 +1833,31 @@ public final class RenderUtil {
         }
         // Initialize the font
         java.awt.Font awtFont = null;
-        if (symbolizer.getFont() != null) {
+        
+        //On cherche d'abord la font dans les ressources du projet
+        String fName = "/fonts/";
+        try {
+        	fName += symbolizer.getFont().getFontFamily();
+        	fName+=".ttf";
+        	InputStream is = RenderUtil.class.getResourceAsStream(fName);
+        	awtFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
+        	awtFont = awtFont.deriveFont(24f); //22f * (float) scaleUOMToPixels
+        } catch (Exception ex) {
+        	//ex.printStackTrace();
+        	System.err.println(fName + " not loaded.  Using an other way to get a valid font.");
+        }
+        
+        //On cherche ensuite la font dans les polices systèmes
+        if (awtFont == null) {
             awtFont = symbolizer.getFont().toAwfFont((float) scaleUOMToPixels);
         }
 
+        //On prend une font par défaut
         if (awtFont == null) {
             awtFont = new java.awt.Font("Default", java.awt.Font.PLAIN, 10); //$NON-NLS-1$
         }
         graphics.setFont(awtFont);
+        
         // Initialize the color for the halo around the text
         Color haloColor = ColorUtil.getColorWithOpacity(Color.WHITE, opacity);
         float haloRadius = 1.0f;
