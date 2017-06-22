@@ -49,7 +49,7 @@ public class Mark {
     private boolean fillWithBorder = false;
 
     private static Shape square = new Rectangle2D.Float(-0.5f, -0.5f, 1.0f, 1.0f);
-    private static Shape circle = new Ellipse2D.Float(-0.45f, -0.45f, 0.9f, 0.9f);
+    private static Shape circle = new Ellipse2D.Float(-0.5f, -0.5f, 1.0f, 1.0f);
     private static Shape triangle = new Polygon2D(new float[] { -0.5f * (float) Math.cos(Math.PI / 6), 0.0f,
             0.5f * (float) Math.cos(Math.PI / 6) }, new float[] { -0.5f * (float) Math.sin(Math.PI / 6), 0.5f,
             -0.5f * (float) Math.sin(Math.PI / 6) }, 3);
@@ -163,7 +163,8 @@ public class Mark {
     private static Shape backSlash = new Polygon2D(new float[] { -0.5f, -0.5f, -0.1f, 0.1f, -0.5f, -0.5f, 0.1f, 0.5f, 0.5f, -0.1f }, new float[] { -0.5f, 0.1f, 0.5f, 0.5f, -0.1f, -0.5f, -0.5f, -0.1f, 0.1f, -0.5f }, 10);
     private static Shape wave = new Polygon2D(new float[] { -0.5f, -0.35f, -0.3f, -0.25f, -0.2f, -0.15f, 0.15f, 0.2f, 0.25f, 0.3f, 0.35f, 0.5f, 0.5f, 0.35f, 0.3f, 0.25f, 0.2f, 0.15f, -0.15f, -0.2f, -0.25f, -0.3f, -0.35f, -0.5f }, 
     		new float[]{ -0.1f, -0.25f, -0.275f, -0.3f, -0.275f, -0.25f, 0.05f, 0.075f, 0.1f, 0.075f, 0.05f, -0.1f, 0.1f, 0.25f, 0.275f, 0.3f, 0.275f, 0.25f, -0.05f, -0.075f, -0.1f, -0.075f, -0.05f, 0.1f },24);
-    private static Shape hAndvLine = new Polygon2D(new float[] { -0.5f, -0.1f, -0.1f, 0.1f, 0.1f, 0.5f, 0.5f, 0.1f, 0.1f, -0.1f, -0.1f, -0.5f },new float[]{ -0.1f, -0.1f, -0.5f, -0.5f, -0.1f, -0.1f, 0.1f, 0.1f, 0.5f, 0.5f, 0.1f, 0.1f},12);
+    private static Shape plus = new Polygon2D(new float[] { -0.25f, -0.05f, -0.05f, 0.05f, 0.05f, 0.25f, 0.25f, 0.05f, 0.05f, -0.05f, -0.05f, -0.25f },new float[]{ -0.05f, -0.05f, -0.25f, -0.25f, -0.05f, -0.05f, 0.05f, 0.05f, 0.25f, 0.25f, 0.05f, 0.05f},12);
+    private static Shape circleMini = new Ellipse2D.Float(-0.4f, -0.4f, 0.8f, 0.8f);
     /**
      * @return the AWT shape used to draw this Mark
      */
@@ -207,8 +208,11 @@ public class Mark {
         if (this.wellKnownName.equalsIgnoreCase("~") || this.wellKnownName.equalsIgnoreCase("wave")){//$NON-NLS-1$
         	return Mark.wave;
         }
-        if (this.wellKnownName.equalsIgnoreCase("+") || this.wellKnownName.equalsIgnoreCase("hAndvLine")){//$NON-NLS-1$
-        	return Mark.hAndvLine;
+        if (this.wellKnownName.equalsIgnoreCase("+") || this.wellKnownName.equalsIgnoreCase("plus")){//$NON-NLS-1$
+        	return Mark.plus;
+        }
+        if (this.wellKnownName.equalsIgnoreCase("circleMini")) {//$NON-NLS-1$
+            return Mark.circleMini;
         }
         return null;
     }
