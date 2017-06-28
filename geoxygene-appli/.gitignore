@@ -5,4 +5,5 @@
 /bin/
 /data/matching-test/
 /log/
+/src/main/resources/xml/last_session_parameters.xml
 geoxygene-configuration.xml

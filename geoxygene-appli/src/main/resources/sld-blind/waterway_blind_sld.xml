@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StyledLayerDescriptor version="1.0.20">
+	<Background>
+		<Color>#808080</Color>
+	</Background>
+  <NamedLayer> <!-- WATER LINES -->
+    <Name>waterLines</Name>
+    <UserStyle>
+      <Name>waterways</Name>
+      <FeatureTypeStyle>
+        <Rule>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke">#b5d0d0</CssParameter>
+              <CssParameter name="stroke-width">12</CssParameter>
+              <CssParameter name="stroke-linejoin">round</CssParameter>
+              <CssParameter name="stroke-linecap">round</CssParameter>
+            </Stroke>
+          </LineSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+  <NamedLayer> <!-- WATER AREAS -->
+    <Name>waterAreas</Name>
+    <UserStyle>
+      <Name>waterareas</Name>
+      <FeatureTypeStyle>
+        <Rule>
+	          <Filter>
+	          	  <Or>
+	              	<PropertyIsEqualTo>
+	                	<PropertyName>waterway</PropertyName>
+	                	<Literal>riverbank</Literal>
+	              	</PropertyIsEqualTo>
+	              	<PropertyIsEqualTo>
+	                	<PropertyName>natural</PropertyName>
+	                	<Literal>water</Literal>
+	              	</PropertyIsEqualTo>              	
+	              <PropertyIsEqualTo>
+	                	<PropertyName>natural</PropertyName>
+	                	<Literal>lake</Literal>
+	              	</PropertyIsEqualTo>              	
+	              </Or>
+	          </Filter>	        
+			<PolygonSymbolizer>
+				<Fill>
+					<CssParameter name="fill">#cccccc</CssParameter>
+					<CssParameter name="fill-opacity">1</CssParameter>
+					<GraphicFill>
+					 <Graphic>
+					   <Mark>
+						 <WellKnownName>/</WellKnownName>
+						 <Fill>
+						   <CssParameter name="fill">#b3b3b3</CssParameter>
+						   <CssParameter name="fill-opacity">1</CssParameter>
+						 </Fill>
+					   </Mark>
+					   <Size>15</Size>
+					 </Graphic>
+				</GraphicFill>					
+				</Fill>
+			</PolygonSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>

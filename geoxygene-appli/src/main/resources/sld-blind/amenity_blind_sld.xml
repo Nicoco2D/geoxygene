@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StyledLayerDescriptor version="1.0.20">
+	<Background>
+		<Color>#808080</Color>
+	</Background>
+  <NamedLayer> <!-- SCHOOLS -->
+    <Name>schools</Name>
+    <UserStyle>
+      <Name>schools</Name>
+      <FeatureTypeStyle>
+        <Rule>
+			<Filter>
+				<Or>
+				<PropertyIsEqualTo>
+					<PropertyName>amenity</PropertyName>
+					<Literal>school</Literal>
+				</PropertyIsEqualTo>
+				<PropertyIsEqualTo>
+					<PropertyName>amenity</PropertyName>
+					<Literal>university</Literal>
+				</PropertyIsEqualTo>				
+				</Or>
+			</Filter>
+	      <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill-opacity">0</CssParameter>
+              <CssParameter name="fill">#f0f0d8</CssParameter>
+            </Fill>
+            <Stroke>
+              <CssParameter name="stroke">#a52a2a</CssParameter>
+              <CssParameter name="stroke-width">0</CssParameter>
+            </Stroke>
+          </PolygonSymbolizer>  
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>	
+  <NamedLayer> <!-- HOSPITALS -->
+    <Name>hospitals</Name>
+    <UserStyle>
+      <Name>hospitals</Name>
+      <FeatureTypeStyle>
+        <Rule>
+			<Filter>
+				<PropertyIsEqualTo>
+					<PropertyName>amenity</PropertyName>
+					<Literal>hospital</Literal>
+				</PropertyIsEqualTo>
+			</Filter>
+	      <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill-opacity">0</CssParameter>
+              <CssParameter name="fill">#f0f0d8</CssParameter>
+            </Fill>
+            <Stroke>
+              <CssParameter name="stroke">#a52a2a</CssParameter>
+              <CssParameter name="stroke-width">0</CssParameter>
+            </Stroke>
+          </PolygonSymbolizer>  
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>	  
+  <NamedLayer> <!-- CIMETERIES -->
+    <Name>cemeteries</Name>
+    <UserStyle>
+      <Name>cemeteries</Name>
+      <FeatureTypeStyle>
+        <Rule>
+          <PropertyIsEqualTo>
+              <PropertyName>amenity</PropertyName>
+              <Literal>grave_yard</Literal>
+          </PropertyIsEqualTo>
+          <PolygonSymbolizer>
+            <Fill>
+            	<GraphicFill>
+					<Graphic>
+					   <Mark>
+						 <WellKnownName>+</WellKnownName>
+						 <FillWithBorder>true</FillWithBorder>
+						 <Fill>
+						   <CssParameter name="fill">#666666</CssParameter>
+						   <CssParameter name="fill-opacity">1</CssParameter>
+						 </Fill>
+					   </Mark>
+					   <Size>20</Size>
+					 </Graphic>
+				</GraphicFill>
+            </Fill>
+			<Stroke>
+				<CssParameter name="stroke">#666666</CssParameter>
+				<CssParameter name="stroke-width">1</CssParameter>
+			</Stroke>
+          </PolygonSymbolizer>
+        </Rule> 
+        <Rule>
+          <PropertyIsEqualTo>
+              <PropertyName>landuse</PropertyName>
+              <Literal>cemetery</Literal>
+          </PropertyIsEqualTo>
+          <PolygonSymbolizer>
+            <Fill>
+            	<GraphicFill>
+					<Graphic>
+					   <Mark>
+						 <WellKnownName>+</WellKnownName>
+						 <FillWithBorder>true</FillWithBorder>
+						 <Fill>
+						   <CssParameter name="fill">#666666</CssParameter>
+						   <CssParameter name="fill-opacity">1</CssParameter>
+						 </Fill>
+					   </Mark>
+					   <Size>20</Size>
+					 </Graphic>
+				</GraphicFill>
+            </Fill>
+			<Stroke>
+				<CssParameter name="stroke">#666666</CssParameter>
+				<CssParameter name="stroke-width">1</CssParameter>
+			</Stroke>
+          </PolygonSymbolizer>
+        </Rule> 
+      </FeatureTypeStyle>
+    </UserStyle>		
+  </NamedLayer>	
+  </StyledLayerDescriptor>

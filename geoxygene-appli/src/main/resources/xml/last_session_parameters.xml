@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><cartagen-last-session-params>
-  <parameter createDb="false" epsg="2154" name="Recent OSM file 3" tagFilter="">D:\Donnees\OSM\lescar.osm</parameter>
-  <parameter createDb="false" epsg="2154" name="Recent OSM file 1" tagFilter="">C:\Users\jerolland\Desktop\CRDV.osm</parameter>
-  <parameter createDb="false" epsg="2154" name="Recent OSM file 2" tagFilter="">D:\Donnees\OSM\lourdes.osm</parameter>
-  <parameter name="Recent CartAGenDoc 1">/home/imran/testdoc</parameter>
+  <parameter createDb="false" epsg="2154" name="Recent OSM file 3" tagFilter="">D:\Donnees\OSM\lourdes.osm</parameter>
+  <parameter createDb="false" epsg="2154" name="Recent OSM file 2" tagFilter="">C:\Users\nidesforges\Downloads\Test_SLD.osm</parameter>
+  <parameter createDb="false" epsg="2154" name="Recent OSM file 4" tagFilter="">D:\Donnees\OSM\lescar.osm</parameter>
   <parameter name="Recent CartAGenDoc 2">E:\Users\gtouya\workspace\geoxygene\geoxygene-appli\src\main\resources\xml\allevardDoc.xml</parameter>
+  <parameter createDb="true" epsg="2154" name="Recent OSM file 1" tagFilter="">C:\Users\nidesforges\Downloads\CRDV.osm</parameter>
+  <parameter name="Recent CartAGenDoc 1">/home/imran/testdoc</parameter>
 </cartagen-last-session-params>

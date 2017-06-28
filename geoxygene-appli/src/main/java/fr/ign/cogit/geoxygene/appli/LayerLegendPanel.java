@@ -626,7 +626,52 @@ public class LayerLegendPanel extends JPanel implements ChangeListener,
         this.parent.removeLayers(toRemove);
 
     }
-
+    
+    /**
+     * Remove the selected layers.
+     */
+    public void removeLayersFromBlindPlugin(ArrayList<String> toDelete) {
+        if (this.layersTable.getRowCount() == 0) {
+            return;
+        }
+        List<Layer> toRemove = new ArrayList<Layer>();
+        List<Integer> rowsToRemove = new ArrayList<Integer>();
+        layersTable.selectAll();
+        for (int row : this.layersTable.getSelectedRows()) {
+        	Layer l = getLayer(row);
+        	if(toDelete.contains(l.getName()))
+        		toRemove.add(l);
+            rowsToRemove.add(0, new Integer(row));
+        }
+        this.parent.removeLayers(toRemove);
+        layersTable.clearSelection();
+    }
+    
+    /**
+     * order all layers.
+     */
+    public void orderLayersFromBlindPlugin(ArrayList<String> order) {
+    	if (this.layersTable.getRowCount() == 0) {
+            return;
+        }
+    	while(!order.isEmpty()){
+	    	for(int i=0;i < layersTable.getRowCount();i++){
+	    		Layer l = getLayer(i);
+	    		if(order.contains(l.getName())){
+	    			if(l.getName().equals(order.get(0))){
+		    			// NICOLAS
+	    				layersTable.changeSelection(i, 1, true, false);
+		    			order.remove(order.get(0));
+		    			moveSelectedLayersToBottom();
+		    			layersTable.clearSelection();
+		    			i--;
+	    			}
+	    		}
+	    	}
+    	}
+    	layersTable.clearSelection();
+    }
+    
     public Set<Layer> getSelectedLayers() {
         Set<Layer> selectedLayers = new HashSet<Layer>();
         for (int row : this.layersTable.getSelectedRows()) {
@@ -637,6 +682,7 @@ public class LayerLegendPanel extends JPanel implements ChangeListener,
         }
         return selectedLayers;
     }
+    
 
     /**
      * Move the selected layers up.

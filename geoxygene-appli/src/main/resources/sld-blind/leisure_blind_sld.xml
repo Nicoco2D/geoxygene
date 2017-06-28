@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StyledLayerDescriptor version="1.0.20">
+	<Background>
+		<Color>#808080</Color>
+	</Background>
+  <NamedLayer> <!-- SQUARE AREAS -->
+    <Name>squareAreas</Name>
+    <UserStyle>
+      <Name>squareAreas</Name>
+      <FeatureTypeStyle>
+        <Rule>
+			<Filter>
+				<PropertyIsEqualTo>
+					<PropertyName>leisure</PropertyName>
+					<Literal>park</Literal>
+				</PropertyIsEqualTo>
+			</Filter>
+	      <PolygonSymbolizer>
+			<Fill>
+				<GraphicFill>
+					 <Graphic>
+					   <Mark>
+						 <WellKnownName>circleMini</WellKnownName>
+						 <FillWithBorder>true</FillWithBorder>
+						 <Fill>
+						   <CssParameter name="fill">#666666</CssParameter>
+						   <CssParameter name="fill-opacity">1</CssParameter>
+						 </Fill>
+					   </Mark>
+					   <Size>15</Size>
+					 </Graphic>
+				</GraphicFill>
+			</Fill>	
+			<Stroke>
+              <CssParameter name="stroke">#666666</CssParameter>
+              <CssParameter name="stroke-width">1</CssParameter>
+            </Stroke>
+          </PolygonSymbolizer>  
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>	
+  <NamedLayer> <!-- SPORTS FIELDS -->
+    <Name>sportsFields</Name>
+    <UserStyle>
+      <Name>sportsFields</Name>
+      <FeatureTypeStyle>
+        <Rule>
+          <PolygonSymbolizer>
+            <Fill>
+              <GraphicFill>
+					 <Graphic>
+					   <Mark>
+						 <WellKnownName>cross</WellKnownName>
+						 <Fill>
+						   <CssParameter name="fill">#666666</CssParameter>
+						   <CssParameter name="fill-opacity">1</CssParameter>
+						 </Fill>
+					   </Mark>
+					   <Size>25</Size>
+					 </Graphic>
+				</GraphicFill>
+            </Fill>
+			<Stroke>
+              <CssParameter name="stroke">#666666</CssParameter>
+              <CssParameter name="stroke-width">1</CssParameter>
+            </Stroke>
+          </PolygonSymbolizer>
+        </Rule> 
+      </FeatureTypeStyle>
+    </UserStyle>		
+  </NamedLayer>	  
+</StyledLayerDescriptor>
