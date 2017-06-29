@@ -132,9 +132,6 @@ public class DisplayableTextRenderer extends DisplayableRenderer<AbstractDisplay
         String text = (value == null) ? null : value.toString();
         if (text != null) {
             RenderUtil.paint(textSym, text, f.getGeom(), viewport, this.textImageGraphics, opacity);
-            if(BlindPlugin.IS_BLIND_ENABLE){
-            	BlindPlugin.paint(textSym, text, f.getGeom(), viewport, this.textImageGraphics, opacity);
-            }
         }
     }
 
