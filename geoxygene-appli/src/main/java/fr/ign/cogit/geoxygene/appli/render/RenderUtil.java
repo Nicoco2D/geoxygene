@@ -1524,7 +1524,7 @@ public final class RenderUtil {
         AffineTransform transform;
         Image scaledImage = image.getScaledInstance(shapeWidth.intValue(),
                 shapeHeight.intValue(), Image.SCALE_FAST);
-        // NICOLAS : test si la texture doit gÃ©rer les bordures ou non
+        // test if we need to take care of border
         if (!careBorder){
         	BufferedImage buff = new BufferedImage(shapeWidth.intValue(),
                     shapeHeight.intValue(), BufferedImage.TYPE_INT_ARGB);
@@ -1544,18 +1544,6 @@ public final class RenderUtil {
 	        im.dispose();
 	        buff.flush();
         }else{
-        	//  NICOLAS : Affichage de la shape a chaque sommet du building
-        	/*for(IDirectPosition pos : geomToTexture.coord()){
-        		try {
-					Point2D dest = viewport.toViewPoint(pos);
-					transform = AffineTransform.getTranslateInstance(
-	        				dest.getX()-shapeWidth/2,dest.getY()-shapeHeight/2);
-					graphics.drawImage(scaledImage,transform,null);
-				} catch (NoninvertibleTransformException e) {
-					e.printStackTrace();
-				}
-        	}*/
-        	//  NICOLAS : Affichage de la shape en mosaique avec test si a l'interieur du batiment
         	for(double tmpY = shape.getBounds2D().getMinY();tmpY < shape.getBounds2D().getMaxY();tmpY=tmpY+shapeHeight){
 	        	for(double tmpX = shape.getBounds2D().getMinX();tmpX < shape.getBounds2D().getMaxX();tmpX = tmpX+shapeWidth){
 	        		if(shapeInsideBuilding(tmpX, tmpY, viewport, shapeWidth, shapeHeight,geometry)){

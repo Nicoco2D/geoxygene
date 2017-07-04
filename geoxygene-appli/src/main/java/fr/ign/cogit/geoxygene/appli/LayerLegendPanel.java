@@ -630,7 +630,7 @@ public class LayerLegendPanel extends JPanel implements ChangeListener,
     /**
      * Remove the selected layers.
      */
-    public void removeLayersFromBlindPlugin(ArrayList<String> toDelete) {
+    public void removeLayersFromBlindPlugin(ArrayList<String> toKeep) {
         if (this.layersTable.getRowCount() == 0) {
             return;
         }
@@ -639,7 +639,7 @@ public class LayerLegendPanel extends JPanel implements ChangeListener,
         layersTable.selectAll();
         for (int row : this.layersTable.getSelectedRows()) {
         	Layer l = getLayer(row);
-        	if(toDelete.contains(l.getName()))
+        	if(!toKeep.contains(l.getName()))
         		toRemove.add(l);
             rowsToRemove.add(0, new Integer(row));
         }
@@ -654,15 +654,28 @@ public class LayerLegendPanel extends JPanel implements ChangeListener,
     	if (this.layersTable.getRowCount() == 0) {
             return;
         }
-    	while(!order.isEmpty()){
+    	ArrayList<String> onlyPresent = new ArrayList<String>();
+    	@SuppressWarnings("unchecked")
+		ArrayList<String> newOrder = (ArrayList<String>) order.clone();
+    	for(int i=0;i < layersTable.getRowCount();i++){
+    		Layer l = getLayer(i);
+    		if(order.contains(l.getName())){
+    			onlyPresent.add(l.getName());
+    		}
+    	}
+    	for(String s : order){
+    		if(!onlyPresent.contains(s))
+    			newOrder.remove(s);
+    	}    	
+    	while(!newOrder.isEmpty()){
 	    	for(int i=0;i < layersTable.getRowCount();i++){
 	    		Layer l = getLayer(i);
-	    		if(order.contains(l.getName())){
-	    			if(l.getName().equals(order.get(0))){
-		    			// NICOLAS
+	    		if(newOrder.contains(l.getName())){
+	    			if(l.getName().equals(newOrder.get(0))){
 	    				layersTable.changeSelection(i, 1, true, false);
-		    			order.remove(order.get(0));
-		    			moveSelectedLayersToBottom();
+		    			newOrder.remove(newOrder.get(0));
+		    			if (i < layersTable.getRowCount()-1)
+		    				moveSelectedLayersToBottom();
 		    			layersTable.clearSelection();
 		    			i--;
 	    			}

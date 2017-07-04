@@ -82,7 +82,7 @@
 						   <CssParameter name="fill-opacity">1</CssParameter>
 						 </Fill>
 					   </Mark>
-					   <Size>15</Size>
+					   <Size>60</Size>
 					 </Graphic>
 				</GraphicFill>
             </Fill>

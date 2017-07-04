@@ -55,7 +55,7 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 	  private static String itemBrailleName = "Noms braille";
 	  private static String itemGreyLevelMap = "Map niveau gris";
 	  private static String itemParameters = "Parametres";
-
+	  private ArrayList<String> listLayers;
 
 	  public BlindPlugin() {
 	  }
@@ -85,31 +85,43 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 	    JMenuItem menuSLD = new JMenuItem(new LoadSLDAction());
 	    menuSLD.addActionListener(this);
 	    
-	    JMenuItem menuSave = new JMenuItem(new SaveImageAction());
-	    menuSave.addActionListener(this);
-	    
 	    blindMenu.add(menuItemSetScale);
 	    blindMenu.add(menuLayers);
 	    menuLayers.add(menuItemDeleteUselessLayers);
 	    menuLayers.add(menuItemOrderLayers);
 	    blindMenu.add(menuSLD);
-	    blindMenu.addSeparator();
-	    blindMenu.add(menuSave);
 
 	    menuBar.add(blindMenu, menuBar.getMenuCount() - 1);
 
 	  }
 	  
-	  @SuppressWarnings("unchecked")
 	  @Override
 	  public void actionPerformed(final ActionEvent e) {
  
 	  }
+	  
+	  /**
+	   * Fill a list with layers needed for this plugin in the right order
+	   * you can add some lines in the list if you need this but be careful of the order
+	   * 
+	   * @author Nicoco2D
+	   * 
+	   */	
+	  private void fillLayerList(){
+		  listLayers = new ArrayList<String>();
+		  listLayers.add("railwayLines");
+		  listLayers.add("paths");
+		  listLayers.add("sportsFields");
+		  listLayers.add("squareAreas");
+		  listLayers.add("cemeteries");
+		  listLayers.add("buildings");
+		  listLayers.add("roads");
+		}
 
 	/**
 	   * Set the scale of the map with the scale 1:1200
 	   * 
-	   * @author Nicolas
+	   * @author Nicoco2D
 	   * 
 	   */
 	class SetScaleAction extends AbstractAction {
@@ -119,7 +131,7 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			application.getMainFrame().getSelectedProjectFrame().getLayerViewPanel().getViewport()
-				.setScale(12000*LayerViewPanel.getMETERS_PER_PIXEL());
+				.setScale(1/(1200*LayerViewPanel.getMETERS_PER_PIXEL()));
 		}
 	
 		public SetScaleAction() {
@@ -132,7 +144,7 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 	/**
 	   * Load the SLD for the level grey map
 	   * 
-	   * @author Nicolas
+	   * @author Nicoco2D
 	   * 
 	   */
 	class LoadSLDAction extends AbstractAction {
@@ -174,30 +186,18 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 	/**
 	   * Delete the useless layers
 	   * 
-	   * @author Nicolas
+	   * @author Nicoco2D
 	   * 
 	   */
 	class DeleteUselessLayersAction extends AbstractAction {
 
 		private static final long serialVersionUID = 1L;
 		
-		private ArrayList<String> toDelete;
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			fillToDeleteList();
-			application.getMainFrame().getSelectedProjectFrame().getLayerLegendPanel().removeLayersFromBlindPlugin(toDelete);
-		}
-	
-		private void fillToDeleteList() {
-			toDelete = new ArrayList<String>();
-			toDelete.add("hospitals");
-			toDelete.add("schools");
-			toDelete.add("landUseAreas");
-			toDelete.add("pointsOfInterest");
-			toDelete.add("trees");
-			toDelete.add("cycleWay");
-			
+			fillLayerList();
+			application.getMainFrame().getSelectedProjectFrame().getLayerLegendPanel().removeLayersFromBlindPlugin(listLayers);
 		}
 
 		public DeleteUselessLayersAction() {
@@ -211,61 +211,24 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener
 	/**
 	   * Order the layers
 	   * 
-	   * @author Nicolas
+	   * @author Nicoco2D
 	   * 
 	   */
 	class OrderLayersAction extends AbstractAction {
 
 		private static final long serialVersionUID = 1L;
-		
-		private ArrayList<String> order;
-		
+				
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			fillOrderList();
-			application.getMainFrame().getSelectedProjectFrame().getLayerLegendPanel().orderLayersFromBlindPlugin(order);
+			fillLayerList();
+			application.getMainFrame().getSelectedProjectFrame().getLayerLegendPanel().orderLayersFromBlindPlugin(listLayers);
 		}
 		
-		private void fillOrderList(){
-			order = new ArrayList<String>();
-			order.add("railwayLines");
-			order.add("paths");
-			order.add("sportsFields");
-			order.add("squareAreas");
-			order.add("cemeteries");
-			order.add("buildings");
-			order.add("roads");
-		}
 
 		public OrderLayersAction() {
 		      this.putValue(Action.SHORT_DESCRIPTION,
 		          "Order all layers to have an optimized map");
 		      this.putValue(Action.NAME, "Order layers");
-		    }
-	}
-	
-	/**
-	   * Save the image
-	   * 
-	   * @author Nicolas
-	   * 
-	   */
-	class SaveImageAction extends AbstractAction {
-
-		private static final long serialVersionUID = 1L;
-		
-		private ArrayList<String> order;
-		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-		//application.getMainFrame().getSelectedProjectFrame().saveAsImage("test", w, h, false);
-		}
-
-
-		public SaveImageAction() {
-		      this.putValue(Action.SHORT_DESCRIPTION,
-		          "Save the image");
-		      this.putValue(Action.NAME, "Save image");
 		    }
 	}
 }
