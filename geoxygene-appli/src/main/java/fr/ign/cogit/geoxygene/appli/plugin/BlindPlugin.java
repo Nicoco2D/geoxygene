@@ -140,6 +140,9 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 
 	}
 
+	/** 
+	 * On affiche le nom complet des rues en récupérant le fullname (Rue Fontgieve)
+	 */
 	private void actionSimplificationNomComplet() {
 		Choice = 1;
 
@@ -158,6 +161,9 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 
 	}
 
+	/**
+	 *  On affiche les noms en simplifiant uniquement le nom des voies (Rue -> R, etc)
+	 */
 	private void actionSimplificationVoies() {
 
 		Choice = 2;
@@ -177,6 +183,11 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 		}
 	}
 
+	/**
+	 *  Remplace les noms des voies avec leur simplification, liste non exhaustive amenée à évoluer avec le temps
+	 * @param name Nom à simplifier
+	 * @return
+	 */
 	private String simplifyNomVoies(String name) {
 		System.out.println(name);
 		// On simplifie le nom des voies de circulation (Avenue -> Av, etc)
@@ -193,7 +204,10 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 		simplify = simplify.replace("rue", "R");
 		return simplify;
 	}
-
+	
+	/**
+	 *  On affiche les noms des rues simplifiés au maximum (Rue Fontgieve -> RF)
+	 */
 	private void actionSimplificationMaximum() {
 		Choice = 3;
 
@@ -207,6 +221,11 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 		}
 	}
 
+	/**
+	 * Méthode qui retourne les premières lettres de chaque mot du string en parametre
+	 * @param text
+	 * @return
+	 */
 	private String getFirstLetters(String text) {
 		String firstLetters = "";
 		text = text.replaceAll("[.,]", "");
@@ -221,6 +240,9 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 
 	}
 
+	/**
+	 * Méthode appelée au clic sur la génération de la légende HTML
+	 */
 	private void actionItemExtractHtmlLegend() {
 		initializeHtmlBlindLegend();
 		for (IRoadLine road : CartAGenDoc.getInstance().getCurrentDataset().getRoads()) {
@@ -296,7 +318,8 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 		}
 	}
 
-	// Essais sur la simplification des noms de rues
+	// Essais sur la simplification des noms de rues / Non fonctionnel 
+	
 	private List<String> list_roads = new ArrayList<>();
 
 	private List<String> simplifyRoadsNameDoublons(List<String> list_roads) {
