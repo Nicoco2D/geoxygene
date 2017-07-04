@@ -1905,10 +1905,11 @@ public final class RenderUtil {
         	fName+=".ttf";
         	InputStream is = RenderUtil.class.getResourceAsStream(fName);
         	awtFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
-        	awtFont = awtFont.deriveFont(24f); //22f * (float) scaleUOMToPixels
+        	awtFont = awtFont.deriveFont(23f); //22f * (float) scaleUOMToPixels
         } catch (Exception ex) {
         	//ex.printStackTrace();
-        	System.err.println(fName + " not loaded.  Using an other way to get a valid font.");
+        	//System.err.println(fName + " not loaded.  Using an other way to get a valid font.");
+        	//On ne gere pas l'exception puisqu'on change la façon de selectionner la font
         }
         
         //On cherche ensuite la font dans les polices systèmes
