@@ -488,6 +488,7 @@ public class OSMLoader extends SwingWorker<Void, Void> {
                     OsmGeneObj obj = factory.createGeneObj(
                             matching.getCartagenClass(), resource, this.nodes,
                             convertor);
+
                     if (obj == null)
                         continue;
                     obj.setCaptureTool(resource.getCaptureTool());
@@ -500,6 +501,8 @@ public class OSMLoader extends SwingWorker<Void, Void> {
                     obj.setVersion(resource.getVersion());
                     obj.setUid(resource.getUid());
                     pop.add(obj);
+                    
+                    
                     mapIdObj.put(resource.getId(), obj);
                 }
             } else {
@@ -530,6 +533,7 @@ public class OSMLoader extends SwingWorker<Void, Void> {
                     obj.setUid(resource.getUid());
                     pop.add(obj);
                     mapIdObj.put(resource.getId(), obj);
+                  
                     if (matching.getTag().equals("landuse")
                             && obj instanceof ISimpleLandUseArea) {
                         ((OsmSimpleLandUseArea) obj).setType(OsmLandUseTypology

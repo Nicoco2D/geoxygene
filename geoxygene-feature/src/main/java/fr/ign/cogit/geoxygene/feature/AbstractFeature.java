@@ -98,7 +98,7 @@ public abstract class AbstractFeature implements IFeature {
     this.population = null;
     this.topo = null;
   }
-
+  
   protected int id;
 
   @Override

@@ -1,5 +1,9 @@
 package fr.ign.cogit.geoxygene.util.algo;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import org.apache.log4j.Logger;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -644,4 +648,157 @@ public class CommonAlgorithms {
     // the length of the intersection represents the length of overlap
     return inter2.length();
   }
+  
+  /**
+	 * 
+	 * @param listePoints la liste des points du Polygon
+	 * @return listePoints la liste des points après traitement
+	 * @author bebout
+	 * Enlève les points inutiles du polygone passé en paramètre (points au milieu de segment, en extremité au delà du segment, etc.
+	 */
+  
+	public static DirectPositionList removeUselessPoints(DirectPositionList listePoints) {
+		for (int k = 0; k < listePoints.size(); k++) {
+			DirectPosition currentPos = (DirectPosition) listePoints.get(k).clone();
+			DirectPosition nextPos = (DirectPosition) listePoints.get((k + 1) % (listePoints.size())).clone();
+			DirectPosition nextPos2 = (DirectPosition) listePoints.get((k + 2) % (listePoints.size())).clone();
+			DirectPosition nextPos3 = (DirectPosition) listePoints.get((k + 3) % (listePoints.size())).clone();
+
+			if ((Math.abs(currentPos.getX() - nextPos.getX()) < 0.0001
+					&& Math.abs(nextPos.getX() - nextPos2.getX()) < 0.0001)
+					&& Math.abs(nextPos.getX() - nextPos3.getX()) < 0.0001) {
+				listePoints.remove(nextPos);
+				listePoints.remove(nextPos2);
+			} else {
+				if ((Math.abs(currentPos.getX() - nextPos.getX()) < 0.0001
+						&& Math.abs(nextPos.getX() - nextPos2.getX()) < 0.0001)) {
+					if (Math.abs(nextPos2.getY() - nextPos3.getY()) < 0.0001) {
+						listePoints.remove(nextPos);
+					} else {
+						listePoints.remove(nextPos2);
+					}
+				}
+			}
+			if ((Math.abs(currentPos.getY() - nextPos.getY()) < 0.0001
+					&& Math.abs(nextPos.getY() - nextPos2.getY()) < 0.0001)
+					&& Math.abs(nextPos.getY() - nextPos3.getY()) < 0.0001) {
+				listePoints.remove(nextPos);
+				listePoints.remove(nextPos2);
+			} else {
+				if ((Math.abs(currentPos.getY() - nextPos.getY()) < 0.0001
+						&& Math.abs(nextPos.getY() - nextPos2.getY()) < 0.0001)) {
+					if (Math.abs(nextPos2.getX() - nextPos3.getX()) < 0.0001) {
+						listePoints.remove(nextPos);
+					} else {
+						listePoints.remove(nextPos2);
+					}
+				}
+			}
+		}
+		return listePoints;
+	}
+	
+	/**
+	 * 
+	 * @param listePoints la liste des points du Polygon
+	 * @return listePointsIntermediaire la liste des points du polygone une fois l'orthogonalisation effectuée
+	 * @author bebout
+	 * Découpe chaque segment du polygone passé en paramètre en deux segments orthogonaux
+	 */
+	
+	public static DirectPositionList orthogonalization(DirectPositionList listePoints){
+		// Chaque segment entre deux points et découpé en deux segments orthogonaux et de même longueur.
+		DirectPositionList listePointsIntermediaire = new DirectPositionList();
+		for (int i=0;i< listePoints.size()-1;i++){
+			DirectPosition nextPos = (DirectPosition) listePoints.get(i+1).clone();
+			DirectPosition posInter1 = (DirectPosition) listePoints.get(0).clone();
+			DirectPosition currentPos = (DirectPosition) listePoints.get(i).clone();
+			DirectPosition posInter2 = (DirectPosition) listePoints.get(0).clone();
+			double distanceX = nextPos.getX()-currentPos.getX();
+			double distanceY = nextPos.getY()-currentPos.getY();
+			
+			if(Math.abs(distanceX) > Math.abs(distanceY)){
+				posInter1.setX(currentPos.getX() + distanceX/2);
+				posInter1.setY(currentPos.getY());
+				posInter2.setX(currentPos.getX() + distanceX/2);
+				posInter2.setY(currentPos.getY() + distanceY);
+			}
+			else{
+				posInter1.setY(currentPos.getY() + distanceY/2);
+				posInter1.setX(currentPos.getX());
+				posInter2.setY(currentPos.getY() + distanceY/2);
+				posInter2.setX(currentPos.getX() + distanceX);
+			}
+			
+			listePointsIntermediaire.add(listePoints.get(i));
+			listePointsIntermediaire.add(posInter1);
+			listePointsIntermediaire.add(posInter2);
+		}
+		return listePointsIntermediaire;
+	}
+	
+	/**
+	 * 
+	 * @param listePoints la liste des points du Polygon
+	 * @return angle correspondant à l'angle dans lequel le Polygon est orienté
+	 * @author bebout
+	 * Calcule l'angle dans lequel le Polygon est orienté
+	 */
+	public static double getMainOrientationPositions(DirectPositionList listePoints){
+		HashMap<Double, Double> mapAngle = new HashMap<>();
+		HashMap<Double, Double> mapAngleFinale = new HashMap<>();
+		for (int i=0;i< listePoints.size()-1;i++){ 
+			DirectPosition nextPos = (DirectPosition) listePoints.get((i + 1) % (listePoints.size())).clone();
+			DirectPosition currentPos = (DirectPosition) listePoints.get(i).clone();
+			double longueur = Math.sqrt((nextPos.getX() - currentPos.getX())*(nextPos.getX() - currentPos.getX()) + (nextPos.getY() - currentPos.getY())*(nextPos.getY() - currentPos.getY()));
+			double distanceX = nextPos.getX() - currentPos.getX();
+			double distanceY = nextPos.getY() - currentPos.getY();
+			double angleArrete = 0;
+			if(Math.abs(distanceX) > Math.abs(distanceY)){
+				angleArrete = Math.toDegrees(Math.acos(Math.abs(distanceY)/longueur))%90;
+			}
+			else{
+				angleArrete = Math.toDegrees(Math.acos(Math.abs(distanceX)/longueur))%90;
+			}
+			if(((distanceX < 0 && distanceY > 0 && Math.abs(distanceX) < Math.abs(distanceY)) || (distanceX > 0 && distanceY < 0 && Math.abs(distanceX) < Math.abs(distanceY)) || (distanceX > 0 && distanceY > 0 && Math.abs(distanceX) > Math.abs(distanceY))|| (distanceX < 0 && distanceY < 0 && Math.abs(distanceX) > Math.abs(distanceY)))){
+				angleArrete = -angleArrete+180;
+			}
+			double longueurAngle = mapAngle.getOrDefault(angleArrete, 0d);
+		
+			mapAngle.put(angleArrete,longueurAngle  + longueur);
+		}
+		
+		double maxValue = Collections.max(mapAngle.values());
+		double maxValueKey = -1;
+		for (Entry<Double, Double> entry1 : mapAngle.entrySet()) {  // Itrate through hashmap
+            if (entry1.getValue()==maxValue) {
+                    maxValueKey = entry1.getKey();
+            }
+        }
+		
+		//Pour chaque valeur de la liste des angles, on regarde si il y a d'autres angles dans un rayon de 5°, si oui, on fait la moyenne pondérée de ces angles.
+		//On prend ensuite la moyenne des angles qui est la plus représentée comme étant l'orientation générale du bâtiment.
+		
+		Double moyValue = maxValue;
+		Double moyKey = maxValueKey;
+		for(Entry<Double, Double> entry : mapAngle.entrySet()){
+			moyValue = entry.getValue();
+			moyKey = entry.getKey();
+			for(Entry<Double, Double> entry1 : mapAngle.entrySet()){
+				if(entry1.getKey() > entry.getKey() - 5 && entry1.getKey() < entry.getKey() + 5){
+					moyValue = entry1.getValue() + moyValue;
+					moyKey = (moyValue*moyKey + entry1.getKey()*entry1.getValue())/(entry1.getValue() + moyValue);
+				}
+			}
+			mapAngleFinale.put(moyKey, moyValue);
+		}
+		
+		maxValue = Collections.max(mapAngleFinale.values());
+		for (Entry<Double, Double> entry : mapAngleFinale.entrySet()) {
+            if (entry.getValue() == maxValue){
+                return entry.getKey();
+            }
+        }
+		return -1;
+	}
 }
