@@ -75,7 +75,9 @@ public class CartAGenPlugin implements GeOxygeneApplicationPlugin,
    * @return instance unique (singleton) de CartagenApplication.
    */
   public static CartAGenPlugin getInstance() {
-    return instance;
+    if (instance == null)
+    	instance = new CartAGenPlugin();
+	  return instance;
   }
 
   private GeOxygeneApplication application = null;

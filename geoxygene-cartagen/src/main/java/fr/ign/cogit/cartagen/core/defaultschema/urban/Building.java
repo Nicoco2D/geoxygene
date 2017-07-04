@@ -167,5 +167,4 @@ public class Building extends UrbanElement implements IBuilding {
       return this.category;
     return super.getAttribute(nomAttribut);
   }
-
 }
