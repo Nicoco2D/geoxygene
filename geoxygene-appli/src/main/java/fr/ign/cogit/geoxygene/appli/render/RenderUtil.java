@@ -1899,7 +1899,7 @@ public final class RenderUtil {
         java.awt.Font awtFont = null;
         
         //On cherche d'abord la font dans les ressources du projet
-        String fName = "/fonts/";
+        String fName = "fonts/";
         try {
         	fName += symbolizer.getFont().getFontFamily();
         	fName+=".ttf";

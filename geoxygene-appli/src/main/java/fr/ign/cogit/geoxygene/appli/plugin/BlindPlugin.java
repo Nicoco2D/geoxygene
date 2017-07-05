@@ -323,7 +323,7 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			for (String name : loadSldList()) {
-				File file = new File("/sld-blind/" + name);
+				File file = new File(BlindPlugin.class.getClassLoader().getResource("sld-blind/" + name).getFile());
 				if (file != null)
 					try {
 						application.getMainFrame().getSelectedProjectFrame().loadSLD(file);
