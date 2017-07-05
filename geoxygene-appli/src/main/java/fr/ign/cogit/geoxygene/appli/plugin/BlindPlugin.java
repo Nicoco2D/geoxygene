@@ -167,10 +167,6 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 				((OsmGeneObj) road).addTag("name", road.getAttribute("fullname").toString());
 			}
 		}
-
-		System.out.println(
-				"Taille de la liste Cartagen : " + CartAGenDoc.getInstance().getCurrentDataset().getRoads().size());
-
 	}
 
 	/**
@@ -205,7 +201,6 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 	 * @return
 	 */
 	private String simplifyNomVoies(String name) {
-		System.out.println(name);
 		// On simplifie le nom des voies de circulation (Avenue -> Av, etc)
 		String simplify = name;
 		simplify = simplify.replace("Avenue", "Av");
@@ -341,11 +336,11 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 
 		private ArrayList<String> loadSldList() {
 			ArrayList<String> sldToLoad = new ArrayList<String>();
+			sldToLoad.add("roads_blind_sld.xml");
 			sldToLoad.add("buildings_blind_sld.xml");
 			sldToLoad.add("amenity_blind_sld.xml");
 			sldToLoad.add("leisure_blind_sld.xml");
 			sldToLoad.add("railway_blind_sld.xml");
-			sldToLoad.add("roads_blind_sld.xml");
 			sldToLoad.add("waterway_blind_sld.xml");
 			return sldToLoad;
 		}
@@ -463,36 +458,7 @@ public class BlindPlugin implements GeOxygeneApplicationPlugin, ActionListener {
 	private List<String> list_roads = new ArrayList<>();
 
 	private List<String> simplifyRoadsNameDoublons(List<String> list_roads) {
-		List<String> list_roads_simplified = new ArrayList<>();
-		// On peuple la liste des noms de route (à faire avant de la passer en
-		// paramètre en condition réel)
-		list_roads.add("Rue Fontgiève");
-		list_roads.add("Rue Fontaine");
-		list_roads.add("Boulevard Fontaine");
-		list_roads.add("Boulevard François Mitterand");
-
-		for (String name : list_roads) {
-			String name_simp = simplifyNameWithChoice(name);
-			if (list_roads_simplified.contains(name_simp)) {
-				deepSimplify(name_simp);
-			}
-			list_roads_simplified.add(name_simp);
-		}
-
-		List<String> sameName = new ArrayList<>();
-		for (String name : list_roads) {
-
-		}
-
-		System.out.println(list_roads);
-		System.out.println(list_roads_simplified);
-
-		return list_roads_simplified;
-	}
-
-	private String deepSimplify(String name) {
-		String namesimp = "";
-
-		return namesimp;
+		//TODO handle similar strings
+		return list_roads;
 	}
 }
