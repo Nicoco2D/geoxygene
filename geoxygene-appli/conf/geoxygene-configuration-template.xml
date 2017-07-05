@@ -19,6 +19,8 @@
     <plugin>fr.ign.cogit.geoxygene.appli.plugin.cartagen.CartAGenPlugin</plugin>
     <plugin>fr.ign.cogit.geoxygene.appli.plugin.ResamplerPlugin</plugin>
     <plugin>fr.ign.cogit.geoxygene.appli.plugin.CartoPlugin</plugin>
+	<plugin>fr.ign.cogit.geoxygene.appli.plugin.BlindPlugin</plugin>
+
     
     <plugin>fr.ign.cogit.geoxygene.appli.plugin.lenses.LensesPlugin</plugin>
     

@@ -1900,16 +1900,18 @@ public final class RenderUtil {
         
         //On cherche d'abord la font dans les ressources du projet
         String fName = "fonts/";
-        try {
-        	fName += symbolizer.getFont().getFontFamily();
-        	fName+=".ttf";
-        	InputStream is = RenderUtil.class.getResourceAsStream(fName);
-        	awtFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
-        	awtFont = awtFont.deriveFont(23f); //22f * (float) scaleUOMToPixels
-        } catch (Exception ex) {
-        	//ex.printStackTrace();
-        	//System.err.println(fName + " not loaded.  Using an other way to get a valid font.");
-        	//On ne gere pas l'exception puisqu'on change la façon de selectionner la font
+        if(symbolizer.getFont().getFontFamily() != "Default"){
+	        try {
+	        	fName += symbolizer.getFont().getFontFamily();
+	        	fName+=".ttf";
+	        	InputStream is = RenderUtil.class.getClassLoader().getResourceAsStream(fName);
+	        	awtFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
+	        	awtFont = awtFont.deriveFont(23f); //22f * (float) scaleUOMToPixels
+	        } catch (Exception ex) {
+	        	//ex.printStackTrace();
+	        	//System.err.println(fName + " not loaded.  Using an other way to get a valid font.");
+	        	//On ne gere pas l'exception puisqu'on change la façon de selectionner la font
+	        }
         }
         
         //On cherche ensuite la font dans les polices systèmes
