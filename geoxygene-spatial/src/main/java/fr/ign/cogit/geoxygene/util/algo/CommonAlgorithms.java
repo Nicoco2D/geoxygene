@@ -664,30 +664,24 @@ public class CommonAlgorithms {
 			DirectPosition nextPos2 = (DirectPosition) listePoints.get((k + 2) % (listePoints.size())).clone();
 			DirectPosition nextPos3 = (DirectPosition) listePoints.get((k + 3) % (listePoints.size())).clone();
 
-			if ((Math.abs(currentPos.getX() - nextPos.getX()) < 0.0001
-					&& Math.abs(nextPos.getX() - nextPos2.getX()) < 0.0001)
-					&& Math.abs(nextPos.getX() - nextPos3.getX()) < 0.0001) {
+			if (currentPos.getX() == nextPos.getX() &&nextPos.getX() == nextPos2.getX() && nextPos.getX() == nextPos3.getX()) {
 				listePoints.remove(nextPos);
 				listePoints.remove(nextPos2);
 			} else {
-				if ((Math.abs(currentPos.getX() - nextPos.getX()) < 0.0001
-						&& Math.abs(nextPos.getX() - nextPos2.getX()) < 0.0001)) {
-					if (Math.abs(nextPos2.getY() - nextPos3.getY()) < 0.0001) {
+				if (currentPos.getX() == nextPos.getX() && nextPos.getX() == nextPos2.getX()) {
+					if (nextPos2.getY() == nextPos3.getY()) {
 						listePoints.remove(nextPos);
 					} else {
 						listePoints.remove(nextPos2);
 					}
 				}
 			}
-			if ((Math.abs(currentPos.getY() - nextPos.getY()) < 0.0001
-					&& Math.abs(nextPos.getY() - nextPos2.getY()) < 0.0001)
-					&& Math.abs(nextPos.getY() - nextPos3.getY()) < 0.0001) {
+			if (currentPos.getY() == nextPos.getY() && nextPos.getY() == nextPos2.getY() && nextPos.getY() == nextPos3.getY()) {
 				listePoints.remove(nextPos);
 				listePoints.remove(nextPos2);
 			} else {
-				if ((Math.abs(currentPos.getY() - nextPos.getY()) < 0.0001
-						&& Math.abs(nextPos.getY() - nextPos2.getY()) < 0.0001)) {
-					if (Math.abs(nextPos2.getX() - nextPos3.getX()) < 0.0001) {
+				if (currentPos.getY() == nextPos.getY() && nextPos.getY() == nextPos2.getY()) {
+					if (nextPos2.getX() == nextPos3.getX()) {
 						listePoints.remove(nextPos);
 					} else {
 						listePoints.remove(nextPos2);
@@ -769,18 +763,12 @@ public class CommonAlgorithms {
 		}
 		
 		double maxValue = Collections.max(mapAngle.values());
-		double maxValueKey = -1;
-		for (Entry<Double, Double> entry1 : mapAngle.entrySet()) {  // Itrate through hashmap
-            if (entry1.getValue()==maxValue) {
-                    maxValueKey = entry1.getKey();
-            }
-        }
-		
+	
 		//Pour chaque valeur de la liste des angles, on regarde si il y a d'autres angles dans un rayon de 5°, si oui, on fait la moyenne pondérée de ces angles.
 		//On prend ensuite la moyenne des angles qui est la plus représentée comme étant l'orientation générale du bâtiment.
 		
-		Double moyValue = maxValue;
-		Double moyKey = maxValueKey;
+		Double moyValue = 0.0;
+		Double moyKey = 0.0;
 		for(Entry<Double, Double> entry : mapAngle.entrySet()){
 			moyValue = entry.getValue();
 			moyKey = entry.getKey();

@@ -802,8 +802,6 @@ private class BuildingsOrthogonalization extends AbstractAction {
 				DirectPositionList listePointsIntermediaire = new DirectPositionList();
 				double angle = 0;
 
-				System.out.println("Aire initiale : " + obj.getGeom().area());
-
 				//On calcule l'orientation principale du bâtiment
 				angle = CommonAlgorithms.getMainOrientationPositions(listePoints);
 				
@@ -811,7 +809,7 @@ private class BuildingsOrthogonalization extends AbstractAction {
 				
 				obj.setGeom(CommonAlgorithms.rotation(obj.getGeom(), Math.toRadians(-angle)));
 				listePoints = (DirectPositionList) obj.getGeom().getExterior().getGenerator(0).coord().clone();
-				listePointsIntermediaire.clear();
+				//listePointsIntermediaire.clear();
 				
 				//Analyse des longueurs des côtés
 				//En fonction du choix de l'utilisateur pour le niveau de précision de l'orthogonalisation, on place des points intermédiare sur chaque façade du bâtiment
@@ -824,7 +822,6 @@ private class BuildingsOrthogonalization extends AbstractAction {
 					double distanceY = nextPos.getY() - currentPos.getY();
 					listePointsIntermediaire.add((DirectPosition) currentPos.clone());
 					double angleArrete = Math.toDegrees(Math.acos(distanceX/longueur))%180;
-					System.out.println(angleArrete);
 					if (angleArrete%90 > 5 && angleArrete%90 < 85 && longueur > 10){
 						//int nbSegments = 10; //(int) Math.round((longueur / (obj.getGeom().perimeter()/10)));
 						for (int j=0; j < nbSegments-1; j++){
@@ -851,13 +848,11 @@ private class BuildingsOrthogonalization extends AbstractAction {
 				obj.setGeom(CommonAlgorithms.rotation(obj.getGeom(), Math.toRadians(angle)));
 				listePointsIntermediaire.clear();
 				listePoints.clear();
-				
-				System.out.println("Aire finale : " + obj.getGeom().area());
 			}
 		}
 
 		public BuildingsOrthogonalizationWithOrientation() {
-			this.putValue(Action.NAME, "Buildings Orthogonalization by PPRE");
+			this.putValue(Action.NAME, "Buildings Orthogonalization with orientation");
 		}
 	}
   
@@ -963,8 +958,6 @@ private class BuildingsOrthogonalization extends AbstractAction {
      					historiqueSimplification.add(listePointsIntermediaire.clone());
      					simplifyLessBtn.setEnabled(true);
      					obj.getGeom().getInterior().clear();
-     					
-     					System.out.println("Aire initiale : " + obj.getGeom().area());
      					
      					angle = CommonAlgorithms.getMainOrientationPositions(listePointsIntermediaire);
      					obj.setGeom(CommonAlgorithms.rotation(obj.getGeom(), Math.toRadians(-angle)));
@@ -1105,7 +1098,6 @@ private class BuildingsOrthogonalization extends AbstractAction {
  														isOkSimplify = false;
  													}
  												}
- 												
  											}
  											else{
  												if(inside){
@@ -1184,7 +1176,6 @@ private class BuildingsOrthogonalization extends AbstractAction {
      					
      					obj.setGeom(CommonAlgorithms.rotation(obj.getGeom(), Math.toRadians(angle)));
      					
-     					System.out.println("Aire finale : " + obj.getGeom().area());
      					ProjectFrame selectedProjectFrame = GeOxygeneEventManager.getInstance().getApplication().getMainFrame().getSelectedProjectFrame();
      					selectedProjectFrame.getLayerViewPanel().repaint();
      				}
