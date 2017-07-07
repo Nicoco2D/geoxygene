@@ -809,7 +809,7 @@ private class BuildingsOrthogonalization extends AbstractAction {
 				
 				obj.setGeom(CommonAlgorithms.rotation(obj.getGeom(), Math.toRadians(-angle)));
 				listePoints = (DirectPositionList) obj.getGeom().getExterior().getGenerator(0).coord().clone();
-				listePointsIntermediaire.clear();
+				//listePointsIntermediaire.clear();
 				
 				//Analyse des longueurs des côtés
 				//En fonction du choix de l'utilisateur pour le niveau de précision de l'orthogonalisation, on place des points intermédiare sur chaque façade du bâtiment
@@ -848,11 +848,12 @@ private class BuildingsOrthogonalization extends AbstractAction {
 				obj.setGeom(CommonAlgorithms.rotation(obj.getGeom(), Math.toRadians(angle)));
 				listePointsIntermediaire.clear();
 				listePoints.clear();	
+
 			}
 		}
 
 		public BuildingsOrthogonalizationWithOrientation() {
-			this.putValue(Action.NAME, "Buildings Orthogonalization by PPRE");
+			this.putValue(Action.NAME, "Buildings Orthogonalization with orientation");
 		}
 	}
   
@@ -958,7 +959,6 @@ private class BuildingsOrthogonalization extends AbstractAction {
      					historiqueSimplification.add(listePointsIntermediaire.clone());
      					simplifyLessBtn.setEnabled(true);
      					obj.getGeom().getInterior().clear();
-     					     					
      					angle = CommonAlgorithms.getMainOrientationPositions(listePointsIntermediaire);
      					obj.setGeom(CommonAlgorithms.rotation(obj.getGeom(), Math.toRadians(-angle)));
      	
@@ -1098,7 +1098,6 @@ private class BuildingsOrthogonalization extends AbstractAction {
  														isOkSimplify = false;
  													}
  												}
- 												
  											}
  											else{
  												if(inside){
